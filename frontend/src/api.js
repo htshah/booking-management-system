@@ -5,6 +5,18 @@ export async function getCourts() {
   return res.json();
 }
 
+export async function getCourt(courtId) {
+  const res = await fetch(`${API_BASE_URL}/courts/${courtId}`);
+  return res.json();
+}
+
+export async function getAvailability(courtId, date) {
+  const res = await fetch(
+    `${API_BASE_URL}/courts/${courtId}/availability?date=${date}`
+  );
+  return res.json();
+}
+
 export async function getBookings(userId) {
   const res = await fetch(`${API_BASE_URL}/bookings?user_id=${userId}`);
   return res.json();

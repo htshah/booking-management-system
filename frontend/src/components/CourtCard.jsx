@@ -1,6 +1,8 @@
+import { Link } from "react-router-dom";
+
 function CourtCard({ court }) {
   return (
-    <div className="court-card">
+    <Link to={`/courts/${court.id}`} className="court-card">
       <img src={court.image} alt={court.name} />
       <div className="court-card-body">
         <span className="court-type">{court.type}</span>
@@ -13,7 +15,7 @@ function CourtCard({ court }) {
         </p>
         <p>Hours: {court.hours_of_operation}</p>
       </div>
-    </div>
+    </Link>
   );
 }
 

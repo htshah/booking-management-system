@@ -37,3 +37,9 @@ class BookingOut(BaseModel):
 
     class Config:
         from_attributes = True
+
+
+class SlotOut(BaseModel):
+    start_timestamp: datetime
+    end_timestamp: datetime
+    available: bool

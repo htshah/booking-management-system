@@ -23,6 +23,17 @@ def create_booking(booking: schemas.BookingCreate, db: Session = Depends(get_db)
     if not court:
         raise HTTPException(status_code=404, detail="Court not found")
 
+    conflict = (
+        db.query(models.Booking)
+        .filter(
+            models.Booking.court_id == booking.court_id,
+            models.Booking.start_timestamp == booking.start_timestamp,
+        )
+        .first()
+    )
+    if conflict:
+        raise HTTPException(status_code=409, detail="That slot is already booked")
+
     new_booking = models.Booking(**booking.model_dump())
     db.add(new_booking)
     db.commit()

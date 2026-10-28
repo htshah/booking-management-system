@@ -6,8 +6,8 @@
 
 A tiny court-booking app with two features:
 
-1. **List available courts** — browse courts by name, sport type, address, and hours.
-2. **My bookings** — see your past bookings and create a new one.
+1. **List available courts** — browse courts by name, sport type, address, and hours. Click into a court to view its details, pick a date, and select one or more open time slots to book.
+2. **My bookings** — see your upcoming and past bookings.
 
 There is no login or signup. Instead, a random ID is generated in the browser (stored in `localStorage`) and sent to the backend as a `user_id` to identify "who" is booking. This is not secure and is only meant to keep the exercise simple.
 
@@ -32,7 +32,8 @@ Tables are created automatically on startup via `Base.metadata.create_all()` —
 ### Frontend (`frontend/`)
 
 - `src/pages/CourtsPage.jsx` — lists available courts
-- `src/pages/BookingsPage.jsx` — shows past bookings and a form to create a new one
+- `src/pages/CourtDetailPage.jsx` — court details, date picker, and time-slot booking
+- `src/pages/BookingsPage.jsx` — shows upcoming and past bookings
 - `src/api.js` — plain `fetch` calls to the backend
 - `src/userId.js` — generates/reads the random `user_id` from `localStorage`
 
@@ -71,12 +72,13 @@ Open `http://localhost:5173` in your browser.
 
 ## API endpoints
 
-| Method | Path                     | Description                        |
-| ------ | ------------------------ | ----------------------------------- |
-| GET    | `/courts`                | List all courts                     |
-| GET    | `/courts/{court_id}`     | Get a single court                  |
-| GET    | `/bookings?user_id=...`  | List bookings for a given user      |
-| POST   | `/bookings`              | Create a new booking                |
+| Method | Path                                      | Description                                      |
+| ------ | ------------------------------------------ | ------------------------------------------------- |
+| GET    | `/courts`                                  | List all courts                                   |
+| GET    | `/courts/{court_id}`                       | Get a single court                                 |
+| GET    | `/courts/{court_id}/availability?date=...` | List time slots for a court on a date (fixed 6am-10pm, 1-hour slots) and whether each is available |
+| GET    | `/bookings?user_id=...`                    | List bookings for a given user                    |
+| POST   | `/bookings`                                | Create a new booking for one slot                  |
 
 ## What this is good for
 
