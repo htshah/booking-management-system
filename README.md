@@ -14,8 +14,10 @@ There is no login or signup. Instead, a random ID is generated in the browser (s
 ## Repo structure
 
 ```
-backend/     FastAPI + PostgreSQL API (Python)
-frontend/    React + Vite single-page app (JavaScript)
+backend/            FastAPI + PostgreSQL API (Python)
+frontend/           React + Vite single-page app (JavaScript)
+docker-compose.yml  db + backend + frontend containers
+Makefile            `make up` / `make down` wrapper around docker compose
 ```
 
 ### Backend (`backend/`)
@@ -39,7 +41,28 @@ Tables are created automatically on startup via `Base.metadata.create_all()` —
 
 ## Running locally
 
-### 1. Database
+### Option A: Docker Compose (recommended)
+
+This spins up Postgres, the backend, and the frontend together.
+
+```bash
+make up     # builds images and starts db, backend, frontend in the background
+make seed   # one-time: insert sample courts
+make logs   # tail logs from all services
+make down   # stop and remove the containers
+```
+
+- Frontend: http://localhost:5173
+- Backend: http://localhost:8000
+- Postgres: localhost:5432 (user `postgres`, password `postgres`, db `rally_courts`)
+
+Both `backend/` and `frontend/` are bind-mounted into their containers, so code changes on your machine are picked up automatically (uvicorn `--reload` and Vite's dev server).
+
+See the [`Makefile`](Makefile) for other targets (`build`, `ps`, `restart`, `clean`).
+
+### Option B: Run everything manually
+
+#### 1. Database
 
 You need a local PostgreSQL instance. The quickest way is Docker:
 
@@ -47,7 +70,7 @@ You need a local PostgreSQL instance. The quickest way is Docker:
 docker run --name rally-courts-db -e POSTGRES_PASSWORD=postgres -e POSTGRES_DB=rally_courts -p 5432:5432 -d postgres
 ```
 
-### 2. Backend
+#### 2. Backend
 
 ```bash
 cd backend
@@ -60,7 +83,7 @@ python -m app.seed             # seed sample courts
 uvicorn app.main:app --reload  # runs on http://localhost:8000
 ```
 
-### 3. Frontend
+#### 3. Frontend
 
 ```bash
 cd frontend
