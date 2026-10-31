@@ -29,6 +29,7 @@ Makefile            `make up` / `make down` wrapper around docker compose
 - `app/routers/` — `courts.py` and `bookings.py` route handlers
 - `app/seed.py` — inserts a handful of sample courts
 - `pyproject.toml` / `uv.lock` — dependencies, managed with [uv](https://docs.astral.sh/uv/)
+- `.python-version` — pins the Python version for `uv`
 
 Tables are created automatically on startup via `Base.metadata.create_all()` — there are no migrations (e.g. Alembic) in this project, again to keep things simple.
 
@@ -39,6 +40,7 @@ Tables are created automatically on startup via `Base.metadata.create_all()` —
 - `src/pages/BookingsPage.jsx` — shows upcoming and past bookings
 - `src/api.js` — plain `fetch` calls to the backend
 - `src/userId.js` — generates/reads the random `user_id` from `localStorage`
+- `.tool-versions` — pins the Node version for [asdf](https://asdf-vm.com/), matching the Dockerfile's `node:26` base image
 
 ## Running locally
 
