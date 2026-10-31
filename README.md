@@ -28,6 +28,7 @@ Makefile            `make up` / `make down` wrapper around docker compose
 - `app/schemas.py` — Pydantic request/response models
 - `app/routers/` — `courts.py` and `bookings.py` route handlers
 - `app/seed.py` — inserts a handful of sample courts
+- `pyproject.toml` / `uv.lock` — dependencies, managed with [uv](https://docs.astral.sh/uv/)
 
 Tables are created automatically on startup via `Base.metadata.create_all()` — there are no migrations (e.g. Alembic) in this project, again to keep things simple.
 
@@ -72,15 +73,15 @@ docker run --name rally-courts-db -e POSTGRES_PASSWORD=postgres -e POSTGRES_DB=r
 
 #### 2. Backend
 
+Dependencies are managed with [uv](https://docs.astral.sh/uv/) ([install instructions](https://docs.astral.sh/uv/getting-started/installation/)) instead of `venv` + `pip`.
+
 ```bash
 cd backend
-python3 -m venv venv
-source venv/bin/activate
-pip install -r requirements.txt
 cp .env.example .env   # adjust DATABASE_URL if needed
 
-python -m app.seed             # seed sample courts
-uvicorn app.main:app --reload  # runs on http://localhost:8000
+uv sync                        # creates .venv and installs dependencies from uv.lock
+uv run python -m app.seed      # seed sample courts
+uv run uvicorn app.main:app --reload  # runs on http://localhost:8000
 ```
 
 #### 3. Frontend
