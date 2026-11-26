@@ -16,7 +16,7 @@ jobs:
           port: ${{ secrets.EC2_SSH_PORT || 22 }}
           script: |
             set -euo pipefail
-            cd "${{ secrets.EC2_PROJECT_PATH }}"
+            cd ${{ secrets.EC2_PROJECT_PATH }}
             git fetch origin master
             git reset --hard origin/master
             docker compose up --build -d
