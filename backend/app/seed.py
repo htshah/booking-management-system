@@ -49,7 +49,7 @@ def random_court(index):
         "city": city,
         "state": state,
         "zipcode": zipcode,
-        "image": None,
+        "image": f"https://picsum.photos/seed/rally-court-{index}/400/300",
         "hours_of_operation": random.choice(HOURS_OPTIONS),
     }
 
