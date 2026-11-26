@@ -63,6 +63,18 @@ Both `backend/` and `frontend/` are bind-mounted into their containers, so code 
 
 See the [`Makefile`](Makefile) for other targets (`build`, `ps`, `restart`, `clean`).
 
+#### Changing host/port
+
+Copy [`.env.example`](.env.example) to `.env` at the repo root to override the
+host/port each service binds to and is reached at (Docker Compose loads this
+file automatically):
+
+```bash
+cp .env.example .env
+# edit BACKEND_PORT / FRONTEND_PORT / etc., then
+make restart
+```
+
 ### Option B: Run everything manually
 
 #### 1. Database
@@ -79,17 +91,18 @@ Dependencies are managed with [uv](https://docs.astral.sh/uv/) ([install instruc
 
 ```bash
 cd backend
-cp .env.example .env   # adjust DATABASE_URL if needed
+cp .env.example .env   # adjust DATABASE_URL / HOST / PORT / CORS_ORIGINS if needed
 
 uv sync                        # creates .venv and installs dependencies from uv.lock
 uv run python -m app.seed      # seed sample courts
-uv run uvicorn app.main:app --reload  # runs on http://localhost:8000
+uv run uvicorn app.main:app --host $HOST --port $PORT --reload  # runs on http://$HOST:$PORT
 ```
 
 #### 3. Frontend
 
 ```bash
 cd frontend
+cp .env.example .env   # adjust VITE_API_BASE_URL / HOST / PORT if needed
 npm install
 npm run dev   # runs on http://localhost:5173
 ```

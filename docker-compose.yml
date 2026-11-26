@@ -7,7 +7,7 @@ services:
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: rally_courts
     ports:
-      - "5432:5432"
+      - "${DB_PORT:-5432}:5432"
     volumes:
       - db_data:/var/lib/postgresql/data
     healthcheck:
@@ -21,8 +21,11 @@ services:
     container_name: rally_courts_backend
     environment:
       DATABASE_URL: postgresql://postgres:postgres@db:5432/rally_courts
+      HOST: ${BACKEND_HOST:-0.0.0.0}
+      PORT: ${BACKEND_PORT:-8000}
+      CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:${FRONTEND_PORT:-5173}}
     ports:
-      - "8000:8000"
+      - "${BACKEND_PORT:-8000}:${BACKEND_PORT:-8000}"
     volumes:
       - ./backend:/app
       - /app/.venv
@@ -33,8 +36,12 @@ services:
   frontend:
     build: ./frontend
     container_name: rally_courts_frontend
+    environment:
+      HOST: ${FRONTEND_HOST:-0.0.0.0}
+      PORT: ${FRONTEND_PORT:-5173}
+      VITE_API_BASE_URL: ${VITE_API_BASE_URL:-http://localhost:${BACKEND_PORT:-8000}}
     ports:
-      - "5173:5173"
+      - "${FRONTEND_PORT:-5173}:${FRONTEND_PORT:-5173}"
     volumes:
       - ./frontend:/app
       - /app/node_modules
