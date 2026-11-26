@@ -2,6 +2,7 @@ services:
   db:
     image: postgres:16-alpine
     container_name: rally_courts_db
+    restart: unless-stopped
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
@@ -19,6 +20,7 @@ services:
   backend:
     build: ./backend
     container_name: rally_courts_backend
+    restart: unless-stopped
     environment:
       DATABASE_URL: postgresql://postgres:postgres@db:5432/rally_courts
       HOST: ${BACKEND_HOST:-0.0.0.0}
@@ -36,6 +38,7 @@ services:
   frontend:
     build: ./frontend
     container_name: rally_courts_frontend
+    restart: unless-stopped
     environment:
       HOST: ${FRONTEND_HOST:-0.0.0.0}
       PORT: ${FRONTEND_PORT:-5173}
