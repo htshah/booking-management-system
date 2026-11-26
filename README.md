@@ -27,7 +27,7 @@ Makefile            `make up` / `make down` wrapper around docker compose
 - `app/models.py` — `Court` and `Booking` ORM models
 - `app/schemas.py` — Pydantic request/response models
 - `app/routers/` — `courts.py` and `bookings.py` route handlers
-- `app/seed.py` — inserts a handful of sample courts
+- `app/seed.py` — inserts a handful of sample courts, or N random ones if given a count
 - `pyproject.toml` / `uv.lock` — dependencies, managed with [uv](https://docs.astral.sh/uv/)
 - `.python-version` — pins the Python version for `uv`
 
@@ -50,7 +50,8 @@ This spins up Postgres, the backend, and the frontend together.
 
 ```bash
 make up     # builds images and starts db, backend, frontend in the background
-make seed   # one-time: insert sample courts
+make seed          # one-time: insert sample courts
+make seed N=20     # add 20 random courts instead
 make logs   # tail logs from all services
 make down   # stop and remove the containers
 ```
@@ -95,6 +96,7 @@ cp .env.example .env   # adjust DATABASE_URL / HOST / PORT / CORS_ORIGINS if nee
 
 uv sync                        # creates .venv and installs dependencies from uv.lock
 uv run python -m app.seed      # seed sample courts
+uv run python -m app.seed 20   # or add 20 random courts instead
 uv run uvicorn app.main:app --host $HOST --port $PORT --reload  # runs on http://$HOST:$PORT
 ```
 

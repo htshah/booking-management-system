@@ -13,7 +13,7 @@ logs:
 	docker compose logs -f
 
 seed:
-	docker compose exec backend uv run python -m app.seed
+	docker compose exec backend uv run python -m app.seed $(N)
 
 ps:
 	docker compose ps

@@ -1,7 +1,57 @@
+import random
+import sys
+
 from app.database import Base, SessionLocal, engine
 from app.models import Court
 
 Base.metadata.create_all(bind=engine)
+
+COURT_TYPES = ["tennis", "pickleball", "basketball", "volleyball", "badminton"]
+STREET_NAMES = [
+    "River St",
+    "Fawcett St",
+    "Union Sq",
+    "Washington St",
+    "Columbia Rd",
+    "Beacon St",
+    "Main St",
+    "Highland Ave",
+    "Elm St",
+    "Oak Ave",
+]
+CITIES = [
+    ("Boston", "MA", "02136"),
+    ("Cambridge", "MA", "02138"),
+    ("Somerville", "MA", "02143"),
+    ("Brookline", "MA", "02445"),
+    ("Dorchester", "MA", "02125"),
+    ("Medford", "MA", "02155"),
+    ("Quincy", "MA", "02169"),
+    ("Newton", "MA", "02458"),
+]
+HOURS_OPTIONS = [
+    "Mon-Sun 6am-10pm",
+    "Mon-Fri 7am-9pm, Sat-Sun 8am-8pm",
+    "Mon-Sun 6am-11pm",
+    "Mon-Sun 6am-9pm",
+    "Mon-Sun 7am-9pm",
+]
+
+
+def random_court(index):
+    city, state, zipcode = random.choice(CITIES)
+    court_type = random.choice(COURT_TYPES)
+    return {
+        "name": f"{city} {court_type.capitalize()} Court {index}",
+        "type": court_type,
+        "address_1": f"{random.randint(1, 999)} {random.choice(STREET_NAMES)}",
+        "address_2": None,
+        "city": city,
+        "state": state,
+        "zipcode": zipcode,
+        "image": None,
+        "hours_of_operation": random.choice(HOURS_OPTIONS),
+    }
 
 SAMPLE_COURTS = [
     {
@@ -62,9 +112,17 @@ SAMPLE_COURTS = [
 ]
 
 
-def seed():
+def seed(count=None):
     db = SessionLocal()
     try:
+        if count is not None:
+            existing = db.query(Court).count()
+            for i in range(count):
+                db.add(Court(**random_court(existing + i + 1)))
+            db.commit()
+            print(f"Seeded {count} random courts.")
+            return
+
         if db.query(Court).count() > 0:
             print("Courts already seeded, skipping.")
             return
@@ -78,4 +136,5 @@ def seed():
 
 
 if __name__ == "__main__":
-    seed()
+    arg_count = int(sys.argv[1]) if len(sys.argv) > 1 else None
+    seed(arg_count)
